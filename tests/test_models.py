@@ -101,6 +101,41 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(new_product.available, product.available)
         self.assertEqual(new_product.category, product.category)
 
-    #
-    # ADD YOUR TEST CASES HERE
-    #
+    def test_read_a_product(self):
+        """It should read a product"""
+        product = ProductFactory()
+        product.id = None
+        product.create()
+        self.assertIsNotNone(product.id)
+        found_product = product.find(product.id)
+        self.assertEquals(found_product.name, product.name)
+        self.assertEquals(found_product.description, product.description)
+        self.assertEquals(found_product.price, product.price)
+        self.assertEquals(found_product.available, product.available)
+        self.assertEquals(found_product.category, product.category)
+
+    def test_update_a_product(self):
+        """It should update a product"""
+        product = ProductFactory()
+        product.id = None
+        product.create()
+        self.assertIsNotNone(product.id)
+        product.description = "testing"
+        original_id = product.id
+        product.update()
+        self.assertEquals(product.id, original_id)
+        self.assertEquals(product.description, "testing")
+        products = Product.all()
+        self.assertEquals(len(products), 1)
+        self.assertEquals(products[0].id, original_id)
+        self.assertEquals(products[0].description, "testing")
+
+    def test_delete_a_product(self):
+        """It should delete a product"""
+        product = ProductFactory()
+        product.id = None
+        product.create()
+        self.assertIsNotNone(product.id)
+        self.assertEquals(len(Product.all()), 1)
+        product.delete()
+        self.assertEquals(len(Product.all()), 0)
